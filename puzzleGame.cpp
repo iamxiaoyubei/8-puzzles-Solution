@@ -13,6 +13,13 @@ struct LessThanByManhattan
     }
 };
 
+struct LessThanByManhattanAndCostG
+{
+    bool operator()(const State& lhs, const State& rhs) const {
+        return (lhs.getManhattanDistance()+lhs.getCostG()) > (rhs.getManhattanDistance()+rhs.getCostG());
+    }
+};
+
 class Game {
     public:
         Game(State startState, State goalState) {
@@ -74,6 +81,37 @@ class Game {
         }
 
         void AStarSearchByManhattanDistance() {
+            cout << "Using A* Search with Manhattan Distance to Solve..." << endl;
+            this->clearRoutes();
+            // intialize start state
+            State currentState = State(this->startState);
+            currentState.computeManhattanDistance();
+            currentState.setCostG(0);
+            currentState.clearRoutes();
+            // intialize queue
+            priority_queue<State, vector<State>, LessThanByManhattanAndCostG> priorStateQueue;
+            priorStateQueue.push(currentState);
+            // start A* search
+            while (!priorStateQueue.empty()) {
+                currentState = priorStateQueue.top();
+                if (currentState.isGoalState()) {
+                    cout << "A* Search with Manhattan Distance found the goal state!!!" << endl;
+                    this->showRoutesAndStateRoutes(currentState.getRoutes());
+                    return;
+                } else {
+                    priorStateQueue.pop();
+                    for (int i = 0; i < 4; i++) {
+                        if (currentState.canGoNext(i)) {
+                            State nextState = State(currentState);
+                            nextState.goNext(i);
+                            nextState.computeManhattanDistance();
+                            nextState.setCostG(currentState.getCostG()+1);
+                            nextState.setRoutes(currentState.getRoutes(), i);
+                            priorStateQueue.push(nextState);
+                        }
+                    }
+                }
+            }
             return;
         }
 

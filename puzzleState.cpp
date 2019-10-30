@@ -6,8 +6,9 @@ class State {
     public:
         State() {
             // this->beforeState = NULL;
-            int manhattanDistance = -1;
-            int misplacedDistance = -1;
+            this->manhattanDistance = -1;
+            this->misplacedDistance = -1;
+            this->costG = 0; 
         }
 
         State(int initial) {
@@ -18,8 +19,9 @@ class State {
                 this->generateStartState(initial);
             }
             // this->beforeState = NULL;
-            int manhattanDistance = -1;
-            int misplacedDistance = -1;
+            this->manhattanDistance = -1;
+            this->misplacedDistance = -1;
+            this->costG = 0; 
         }
 
         queue<int> getRoutes() {
@@ -63,6 +65,14 @@ class State {
                 }
             }
             return this->manhattanDistance;
+        }
+
+        int getCostG() const {
+            return this->costG;
+        }
+
+        void setCostG(int cost) {
+            this->costG = cost;
         }
 
         int getMisplacedDistance() {
@@ -136,6 +146,7 @@ class State {
         int manhattanDistance;
         int misplacedDistance;
         queue<int> routes;
+        int costG;
         /* generate Goal State
                 1 2 3
                 4 5 6
