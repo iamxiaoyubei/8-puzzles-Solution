@@ -36,6 +36,7 @@ class State {
             beforeRoutes.push(direction);
             this->routes = beforeRoutes;
         }
+
         /* Manhattan Distance Between this State and Goal State
             Goal State Value: 1 2 3 4 5 6 7 8 0
             Goal State Index: 0 1 2 3 4 5 6 7 8
@@ -75,8 +76,18 @@ class State {
             this->costG = cost;
         }
 
-        int getMisplacedDistance() {
-            return 0;
+        int getMisplacedDistance() const {
+            return this->misplacedDistance;
+        }
+
+        int computeMisplacedDistance() {
+            this->misplacedDistance = 0;
+            for (int thisIndex = 0; thisIndex <= 8; thisIndex++) {
+                if (this->puzzles[thisIndex] != 0 && this->puzzles[thisIndex] != (thisIndex+1)) {
+                    this->misplacedDistance++;
+                }
+            }
+            return this->misplacedDistance;
         }
 
         void show() {

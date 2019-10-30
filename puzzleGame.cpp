@@ -20,6 +20,13 @@ struct LessThanByManhattanAndCostG
     }
 };
 
+struct LessThanByMisplacedAndCostG
+{
+    bool operator()(const State& lhs, const State& rhs) const {
+        return (lhs.getMisplacedDistance()+lhs.getCostG()) > (rhs.getMisplacedDistance()+rhs.getCostG());
+    }
+};
+
 class Game {
     public:
         Game(State startState, State goalState) {
@@ -31,7 +38,9 @@ class Game {
             cout << "Using Iterative Deepening Search(IDS) to Solve..." << endl;
             this->clearRoutes();
             for (int depth = 0; depth <= INT_MAX; depth++) {
-                cout << "[Depth Limited Search] -- " << depth << endl;
+                // // debug
+                // cout << "[Depth Limited Search] -- " << depth << endl;
+                // // debug
                 int result = this->depthLimitedSearch(depth, this->startState);
                 if (result == 1) {
                     cout << "IDS found the goal state in depth [" << depth << "]!!!" << endl;
@@ -116,6 +125,37 @@ class Game {
         }
 
         void AStarSearchByMisplacedDistance() {
+            cout << "Using A* Search with Misplaced Distance to Solve..." << endl;
+            this->clearRoutes();
+            // intialize start state
+            State currentState = State(this->startState);
+            currentState.computeMisplacedDistance();
+            currentState.setCostG(0);
+            currentState.clearRoutes();
+            // intialize queue
+            priority_queue<State, vector<State>, LessThanByMisplacedAndCostG> priorStateQueue;
+            priorStateQueue.push(currentState);
+            // start A* search
+            while (!priorStateQueue.empty()) {
+                currentState = priorStateQueue.top();
+                if (currentState.isGoalState()) {
+                    cout << "A* Search with Misplaced Distance found the goal state!!!" << endl;
+                    this->showRoutesAndStateRoutes(currentState.getRoutes());
+                    return;
+                } else {
+                    priorStateQueue.pop();
+                    for (int i = 0; i < 4; i++) {
+                        if (currentState.canGoNext(i)) {
+                            State nextState = State(currentState);
+                            nextState.goNext(i);
+                            nextState.computeMisplacedDistance();
+                            nextState.setCostG(currentState.getCostG()+1);
+                            nextState.setRoutes(currentState.getRoutes(), i);
+                            priorStateQueue.push(nextState);
+                        }
+                    }
+                }
+            }
             return;
         }
         
