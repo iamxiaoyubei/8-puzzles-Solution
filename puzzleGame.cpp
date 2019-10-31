@@ -36,7 +36,7 @@ class Game {
             this->goalState = goalState;
         }
         
-        void IDS() {
+        int IDS() {
             cout << "Using Iterative Deepening Search(IDS) to Solve..." << endl;
             this->clearRoutes();
             for (int depth = 0; depth <= INT_MAX; depth++) {
@@ -47,15 +47,15 @@ class Game {
                 int result = this->depthLimitedSearch(depth, this->startState);
                 if (result == 1) {
                     cout << "IDS found the goal state in depth [" << depth << "]!!!" << endl;
-                    this->showRoutes();
+                    int totalSteps = this->showRoutes();
                     this->showStateRoutes();
-                    return;
+                    return totalSteps;
                 }
             }
-            return;
+            return -1;
         }
 
-        void GreedySearch() {
+        int GreedySearch() {
             cout << "Using Greedy Search to Solve..." << endl;
             this->clearRoutes();
             // intialize start state
@@ -76,8 +76,8 @@ class Game {
                 // // debug
                 if (currentState.isGoalState()) {
                     cout << "Greedy Search found the goal state!!!" << endl;
-                    this->showRoutesAndStateRoutes(currentState.getRoutes());
-                    return;
+                    int totalSteps = this->showRoutesAndStateRoutes(currentState.getRoutes());
+                    return totalSteps;
                 } else {
                     priorStateQueue.pop();
                     for (int i = 0; i < 4; i++) {
@@ -93,10 +93,10 @@ class Game {
                     }
                 }
             }
-            return;
+            return -1;
         }
 
-        void AStarSearchByManhattanDistance() {
+        int AStarSearchByManhattanDistance() {
             cout << "Using A* Search with Manhattan Distance to Solve..." << endl;
             this->clearRoutes();
             // intialize start state
@@ -114,8 +114,8 @@ class Game {
                 isVisited[currentState.getUniqueId()] = true;
                 if (currentState.isGoalState()) {
                     cout << "A* Search with Manhattan Distance found the goal state!!!" << endl;
-                    this->showRoutesAndStateRoutes(currentState.getRoutes());
-                    return;
+                    int totalSteps = this->showRoutesAndStateRoutes(currentState.getRoutes());
+                    return totalSteps;
                 } else {
                     priorStateQueue.pop();
                     for (int i = 0; i < 4; i++) {
@@ -132,10 +132,10 @@ class Game {
                     }
                 }
             }
-            return;
+            return -1;
         }
 
-        void AStarSearchByMisplacedDistance() {
+        int AStarSearchByMisplacedDistance() {
             cout << "Using A* Search with Misplaced Distance to Solve..." << endl;
             this->clearRoutes();
             // intialize start state
@@ -153,8 +153,8 @@ class Game {
                 isVisited[currentState.getUniqueId()] = true;
                 if (currentState.isGoalState()) {
                     cout << "A* Search with Misplaced Distance found the goal state!!!" << endl;
-                    this->showRoutesAndStateRoutes(currentState.getRoutes());
-                    return;
+                    int totalSteps = this->showRoutesAndStateRoutes(currentState.getRoutes());
+                    return totalSteps;
                 } else {
                     priorStateQueue.pop();
                     for (int i = 0; i < 4; i++) {
@@ -171,7 +171,7 @@ class Game {
                     }
                 }
             }
-            return;
+            return -1;
         }
         
     private:
@@ -183,10 +183,11 @@ class Game {
             while (!stateRoutes.empty()) stateRoutes.pop();
         }
 
-        void showRoutesAndStateRoutes(queue<int> outputRoutes) {
+        int showRoutesAndStateRoutes(queue<int> outputRoutes) {
             State currentState = this->startState;
             queue<State> outputStateRoutes;
             outputStateRoutes.push(currentState);
+            int totalSteps = 0;
             // Last In First Out
             while (!outputRoutes.empty()) {
                 currentState.goNext(outputRoutes.front());
@@ -202,6 +203,7 @@ class Game {
                 }
                 cout << " ";
                 outputRoutes.pop();
+                totalSteps++;
             }
             cout << endl;
 
@@ -209,10 +211,12 @@ class Game {
                 outputStateRoutes.front().show();
                 outputStateRoutes.pop();
             }
+            return totalSteps;
         }
 
-        void showRoutes() {
+        int showRoutes() {
             // Last In First Out
+            int totalSteps = 0;
             while (!routes.empty()) {
                 if (routes.top() == 0) {
                     cout << "Up";
@@ -225,8 +229,10 @@ class Game {
                 }
                 cout << " ";
                 routes.pop();
+                totalSteps++;
             }
             cout << endl;
+            return totalSteps;
         }
 
         void showStateRoutes() {
