@@ -6,6 +6,8 @@
 #include <queue>
 using namespace std;
 
+bool isVisited[1000000000];
+
 struct LessThanByManhattan
 {
     bool operator()(const State& lhs, const State& rhs) const {
@@ -41,6 +43,7 @@ class Game {
                 // // debug
                 // cout << "[Depth Limited Search] -- " << depth << endl;
                 // // debug
+                memset(isVisited, 0, sizeof(isVisited));
                 int result = this->depthLimitedSearch(depth, this->startState);
                 if (result == 1) {
                     cout << "IDS found the goal state in depth [" << depth << "]!!!" << endl;
@@ -62,9 +65,11 @@ class Game {
             // intialize queue
             priority_queue<State, vector<State>, LessThanByManhattan> priorStateQueue;
             priorStateQueue.push(currentState);
+            memset(isVisited, 0, sizeof(isVisited));
             // start greedy search
             while (!priorStateQueue.empty()) {
                 currentState = priorStateQueue.top();
+                isVisited[currentState.getUniqueId()] = true;
                 // // debug
                 // cout << "Prior State dis:" << currentState.getManhattanDistance() << endl;
                 // currentState.show();
@@ -79,9 +84,11 @@ class Game {
                         if (currentState.canGoNext(i)) {
                             State nextState = State(currentState);
                             nextState.goNext(i);
-                            nextState.computeManhattanDistance();
-                            nextState.setRoutes(currentState.getRoutes(), i);
-                            priorStateQueue.push(nextState);
+                            if (!isVisited[nextState.getUniqueId()]) {
+                                nextState.computeManhattanDistance();
+                                nextState.setRoutes(currentState.getRoutes(), i);
+                                priorStateQueue.push(nextState);
+                            }
                         }
                     }
                 }
@@ -100,9 +107,11 @@ class Game {
             // intialize queue
             priority_queue<State, vector<State>, LessThanByManhattanAndCostG> priorStateQueue;
             priorStateQueue.push(currentState);
+            memset(isVisited, 0, sizeof(isVisited));
             // start A* search
             while (!priorStateQueue.empty()) {
                 currentState = priorStateQueue.top();
+                isVisited[currentState.getUniqueId()] = true;
                 if (currentState.isGoalState()) {
                     cout << "A* Search with Manhattan Distance found the goal state!!!" << endl;
                     this->showRoutesAndStateRoutes(currentState.getRoutes());
@@ -113,10 +122,12 @@ class Game {
                         if (currentState.canGoNext(i)) {
                             State nextState = State(currentState);
                             nextState.goNext(i);
-                            nextState.computeManhattanDistance();
-                            nextState.setCostG(currentState.getCostG()+1);
-                            nextState.setRoutes(currentState.getRoutes(), i);
-                            priorStateQueue.push(nextState);
+                            if (!isVisited[nextState.getUniqueId()]) {
+                                nextState.computeManhattanDistance();
+                                nextState.setCostG(currentState.getCostG()+1);
+                                nextState.setRoutes(currentState.getRoutes(), i);
+                                priorStateQueue.push(nextState);
+                            }
                         }
                     }
                 }
@@ -135,9 +146,11 @@ class Game {
             // intialize queue
             priority_queue<State, vector<State>, LessThanByMisplacedAndCostG> priorStateQueue;
             priorStateQueue.push(currentState);
+            memset(isVisited, 0, sizeof(isVisited));
             // start A* search
             while (!priorStateQueue.empty()) {
                 currentState = priorStateQueue.top();
+                isVisited[currentState.getUniqueId()] = true;
                 if (currentState.isGoalState()) {
                     cout << "A* Search with Misplaced Distance found the goal state!!!" << endl;
                     this->showRoutesAndStateRoutes(currentState.getRoutes());
@@ -148,10 +161,12 @@ class Game {
                         if (currentState.canGoNext(i)) {
                             State nextState = State(currentState);
                             nextState.goNext(i);
-                            nextState.computeMisplacedDistance();
-                            nextState.setCostG(currentState.getCostG()+1);
-                            nextState.setRoutes(currentState.getRoutes(), i);
-                            priorStateQueue.push(nextState);
+                            if (!isVisited[nextState.getUniqueId()]) {
+                                nextState.computeMisplacedDistance();
+                                nextState.setCostG(currentState.getCostG()+1);
+                                nextState.setRoutes(currentState.getRoutes(), i);
+                                priorStateQueue.push(nextState);
+                            }
                         }
                     }
                 }
@@ -228,16 +243,20 @@ class Game {
                 return 1;
             } else if (0 == depth) {
                 return 0;
+            } else {
+                isVisited[currentState.getUniqueId()] = true;
             }
             for (int i = 0; i < 4; i++) {
                 if (currentState.canGoNext(i)) {
                     State nextState = State(currentState);
                     nextState.goNext(i);
-                    int result = depthLimitedSearch(depth-1, nextState);
-                    if (result == 1) {
-                        this->routes.push(i);
-                        this->stateRoutes.push(currentState);
-                        return 1;
+                    if (!isVisited[nextState.getUniqueId()]) {
+                        int result = depthLimitedSearch(depth-1, nextState);
+                        if (result == 1) {
+                            this->routes.push(i);
+                            this->stateRoutes.push(currentState);
+                            return 1;
+                        }
                     }
                 }
             }

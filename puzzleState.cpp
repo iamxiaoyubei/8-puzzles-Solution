@@ -1,6 +1,7 @@
 #include <iostream>
 #include <ctime>
 #include <queue>
+#include <string>
 using namespace std;
 class State {
     public:
@@ -22,6 +23,15 @@ class State {
             this->manhattanDistance = -1;
             this->misplacedDistance = -1;
             this->costG = 0; 
+        }
+
+        int getUniqueId() {
+            string puzzleStr = "";
+            for (int i = 0; i <= 8; i++) {
+                puzzleStr += to_string(this->puzzles[i]);
+            }
+            int id = stoi(puzzleStr);
+            return id;
         }
 
         queue<int> getRoutes() {
