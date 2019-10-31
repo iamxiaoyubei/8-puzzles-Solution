@@ -15,6 +15,13 @@ struct LessThanByManhattan
     }
 };
 
+struct LessThanByMisplaced
+{
+    bool operator()(const State& lhs, const State& rhs) const {
+        return lhs.getMisplacedDistance() > rhs.getMisplacedDistance();
+    }
+};
+
 struct LessThanByManhattanAndCostG
 {
     bool operator()(const State& lhs, const State& rhs) const {
@@ -55,8 +62,8 @@ class Game {
             return -1;
         }
 
-        int GreedySearch() {
-            cout << "Using Greedy Search to Solve..." << endl;
+        int GreedySearchByManhattanDistance() {
+            cout << "Using Greedy Search With Manhattan Distance to Solve..." << endl;
             this->clearRoutes();
             // intialize start state
             State currentState = State(this->startState);
@@ -75,7 +82,7 @@ class Game {
                 // currentState.show();
                 // // debug
                 if (currentState.isGoalState()) {
-                    cout << "Greedy Search found the goal state!!!" << endl;
+                    cout << "Greedy Search With Manhattan Distance found the goal state!!!" << endl;
                     int totalSteps = this->showRoutesAndStateRoutes(currentState.getRoutes());
                     return totalSteps;
                 } else {
@@ -86,6 +93,43 @@ class Game {
                             nextState.goNext(i);
                             if (!isVisited[nextState.getUniqueId()]) {
                                 nextState.computeManhattanDistance();
+                                nextState.setRoutes(currentState.getRoutes(), i);
+                                priorStateQueue.push(nextState);
+                            }
+                        }
+                    }
+                }
+            }
+            return -1;
+        }
+
+        int GreedySearchByMisplacedDistance() {
+            cout << "Using Greedy Search with Misplaced Distance to Solve..." << endl;
+            this->clearRoutes();
+            // intialize start state
+            State currentState = State(this->startState);
+            currentState.computeMisplacedDistance();
+            currentState.clearRoutes();
+            // intialize queue
+            priority_queue<State, vector<State>, LessThanByMisplaced> priorStateQueue;
+            priorStateQueue.push(currentState);
+            memset(isVisited, 0, sizeof(isVisited));
+            // start greedy search
+            while (!priorStateQueue.empty()) {
+                currentState = priorStateQueue.top();
+                isVisited[currentState.getUniqueId()] = true;
+                if (currentState.isGoalState()) {
+                    cout << "Greedy Search with Misplaced Distance found the goal state!!!" << endl;
+                    int totalSteps = this->showRoutesAndStateRoutes(currentState.getRoutes());
+                    return totalSteps;
+                } else {
+                    priorStateQueue.pop();
+                    for (int i = 0; i < 4; i++) {
+                        if (currentState.canGoNext(i)) {
+                            State nextState = State(currentState);
+                            nextState.goNext(i);
+                            if (!isVisited[nextState.getUniqueId()]) {
+                                nextState.computeMisplacedDistance();
                                 nextState.setRoutes(currentState.getRoutes(), i);
                                 priorStateQueue.push(nextState);
                             }
@@ -188,7 +232,6 @@ class Game {
             queue<State> outputStateRoutes;
             outputStateRoutes.push(currentState);
             int totalSteps = 0;
-            // Last In First Out
             while (!outputRoutes.empty()) {
                 currentState.goNext(outputRoutes.front());
                 outputStateRoutes.push(currentState);

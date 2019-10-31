@@ -6,7 +6,6 @@ using namespace std;
 class State {
     public:
         State() {
-            // this->beforeState = NULL;
             this->manhattanDistance = -1;
             this->misplacedDistance = -1;
             this->costG = 0; 
@@ -19,7 +18,6 @@ class State {
                 // initial means the times of shuffle
                 this->generateStartState(initial);
             }
-            // this->beforeState = NULL;
             this->manhattanDistance = -1;
             this->misplacedDistance = -1;
             this->costG = 0; 
@@ -47,6 +45,10 @@ class State {
             this->routes = beforeRoutes;
         }
 
+        int getManhattanDistance() const {
+            return this->manhattanDistance;
+        }
+
         /* Manhattan Distance Between this State and Goal State
             Goal State Value: 1 2 3 4 5 6 7 8 0
             Goal State Index: 0 1 2 3 4 5 6 7 8
@@ -58,11 +60,6 @@ class State {
             Expected Position -> row: expected_state_index(0)/3 = 0 col: expected_state_index(0)%3 = 0
             Manhattan Distance = |This Position - Expected Position| = 2+2 = 4
         */
-
-        int getManhattanDistance() const {
-            return this->manhattanDistance;
-        }
-
         int computeManhattanDistance() {
             this->manhattanDistance = 0;
             for (int thisIndex = 0; thisIndex <= 8; thisIndex++) {
