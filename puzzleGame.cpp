@@ -4,6 +4,7 @@
 #include <stack>
 #include <climits>
 #include <queue>
+#include <ctime>
 using namespace std;
 
 bool isVisited[1000000000];
@@ -43,9 +44,10 @@ class Game {
             this->goalState = goalState;
         }
         
-        int IDS() {
+        int IDS(clock_t &runningTime) {
             cout << "Using Iterative Deepening Search(IDS) to Solve..." << endl;
             this->clearRoutes();
+            clock_t startTimer = clock();
             for (int depth = 0; depth <= INT_MAX; depth++) {
                 // // debug
                 // cout << "[Depth Limited Search] -- " << depth << endl;
@@ -53,6 +55,8 @@ class Game {
                 memset(isVisited, 0, sizeof(isVisited));
                 int result = this->depthLimitedSearch(depth, this->startState);
                 if (result == 1) {
+                    clock_t endTimer = clock();
+                    runningTime += (endTimer - startTimer);
                     cout << "IDS found the goal state in depth [" << depth << "]!!!" << endl;
                     int totalSteps = this->showRoutes();
                     this->showStateRoutes();
@@ -62,7 +66,7 @@ class Game {
             return -1;
         }
 
-        int GreedySearchByManhattanDistance() {
+        int GreedySearchByManhattanDistance(clock_t &runningTime) {
             cout << "Using Greedy Search With Manhattan Distance to Solve..." << endl;
             this->clearRoutes();
             // intialize start state
@@ -73,6 +77,7 @@ class Game {
             priority_queue<State, vector<State>, LessThanByManhattan> priorStateQueue;
             priorStateQueue.push(currentState);
             memset(isVisited, 0, sizeof(isVisited));
+            clock_t startTimer = clock();
             // start greedy search
             while (!priorStateQueue.empty()) {
                 currentState = priorStateQueue.top();
@@ -82,6 +87,8 @@ class Game {
                 // currentState.show();
                 // // debug
                 if (currentState.isGoalState()) {
+                    clock_t endTimer = clock();
+                    runningTime += (endTimer - startTimer);
                     cout << "Greedy Search With Manhattan Distance found the goal state!!!" << endl;
                     int totalSteps = this->showRoutesAndStateRoutes(currentState.getRoutes());
                     return totalSteps;
@@ -103,7 +110,7 @@ class Game {
             return -1;
         }
 
-        int GreedySearchByMisplacedDistance() {
+        int GreedySearchByMisplacedDistance(clock_t &runningTime) {
             cout << "Using Greedy Search with Misplaced Distance to Solve..." << endl;
             this->clearRoutes();
             // intialize start state
@@ -114,11 +121,14 @@ class Game {
             priority_queue<State, vector<State>, LessThanByMisplaced> priorStateQueue;
             priorStateQueue.push(currentState);
             memset(isVisited, 0, sizeof(isVisited));
+            clock_t startTimer = clock();
             // start greedy search
             while (!priorStateQueue.empty()) {
                 currentState = priorStateQueue.top();
                 isVisited[currentState.getUniqueId()] = true;
                 if (currentState.isGoalState()) {
+                    clock_t endTimer = clock();
+                    runningTime += (endTimer - startTimer);
                     cout << "Greedy Search with Misplaced Distance found the goal state!!!" << endl;
                     int totalSteps = this->showRoutesAndStateRoutes(currentState.getRoutes());
                     return totalSteps;
@@ -140,7 +150,7 @@ class Game {
             return -1;
         }
 
-        int AStarSearchByManhattanDistance() {
+        int AStarSearchByManhattanDistance(clock_t &runningTime) {
             cout << "Using A* Search with Manhattan Distance to Solve..." << endl;
             this->clearRoutes();
             // intialize start state
@@ -152,11 +162,14 @@ class Game {
             priority_queue<State, vector<State>, LessThanByManhattanAndCostG> priorStateQueue;
             priorStateQueue.push(currentState);
             memset(isVisited, 0, sizeof(isVisited));
+            clock_t startTimer = clock();
             // start A* search
             while (!priorStateQueue.empty()) {
                 currentState = priorStateQueue.top();
                 isVisited[currentState.getUniqueId()] = true;
                 if (currentState.isGoalState()) {
+                    clock_t endTimer = clock();
+                    runningTime += (endTimer - startTimer);
                     cout << "A* Search with Manhattan Distance found the goal state!!!" << endl;
                     int totalSteps = this->showRoutesAndStateRoutes(currentState.getRoutes());
                     return totalSteps;
@@ -179,7 +192,7 @@ class Game {
             return -1;
         }
 
-        int AStarSearchByMisplacedDistance() {
+        int AStarSearchByMisplacedDistance(clock_t &runningTime) {
             cout << "Using A* Search with Misplaced Distance to Solve..." << endl;
             this->clearRoutes();
             // intialize start state
@@ -191,11 +204,14 @@ class Game {
             priority_queue<State, vector<State>, LessThanByMisplacedAndCostG> priorStateQueue;
             priorStateQueue.push(currentState);
             memset(isVisited, 0, sizeof(isVisited));
+            clock_t startTimer = clock();
             // start A* search
             while (!priorStateQueue.empty()) {
                 currentState = priorStateQueue.top();
                 isVisited[currentState.getUniqueId()] = true;
                 if (currentState.isGoalState()) {
+                    clock_t endTimer = clock();
+                    runningTime += (endTimer - startTimer);
                     cout << "A* Search with Misplaced Distance found the goal state!!!" << endl;
                     int totalSteps = this->showRoutesAndStateRoutes(currentState.getRoutes());
                     return totalSteps;
