@@ -9,29 +9,25 @@ using namespace std;
 
 bool isVisited[1000000000];
 
-struct LessThanByManhattan
-{
+struct LessThanByManhattan {
     bool operator()(const State& lhs, const State& rhs) const {
         return lhs.getManhattanDistance() > rhs.getManhattanDistance();
     }
 };
 
-struct LessThanByMisplaced
-{
+struct LessThanByMisplaced {
     bool operator()(const State& lhs, const State& rhs) const {
         return lhs.getMisplacedDistance() > rhs.getMisplacedDistance();
     }
 };
 
-struct LessThanByManhattanAndCostG
-{
+struct LessThanByManhattanAndCostG {
     bool operator()(const State& lhs, const State& rhs) const {
         return (lhs.getManhattanDistance()+lhs.getCostG()) > (rhs.getManhattanDistance()+rhs.getCostG());
     }
 };
 
-struct LessThanByMisplacedAndCostG
-{
+struct LessThanByMisplacedAndCostG {
     bool operator()(const State& lhs, const State& rhs) const {
         return (lhs.getMisplacedDistance()+lhs.getCostG()) > (rhs.getMisplacedDistance()+rhs.getCostG());
     }
