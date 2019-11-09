@@ -316,6 +316,8 @@ int AStarSearchByManhattanDistance(clock_t &runningTime) {
 
 ## Experiments
 
+请在根目录下，使用`sh scripts/run.sh`运行程序，按照指示输入参数。
+
 ### Results
 
 times为总共进行的puzzle game的次数，shuffleTimes为初始化start state时的随机游走次数，Avg Running Time为相应的搜索算法的平均运行时间，Avg Steps为相应的搜索算法搜索出来的平均路径步数。
