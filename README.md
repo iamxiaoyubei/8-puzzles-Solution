@@ -368,12 +368,6 @@ times为总共进行的puzzle game的次数，shuffleTimes为初始化start stat
 
 
 
-## Thought
-
-通过两天从零开始的纯手撸代码，拾回了当初写C++的热情，也对这几种算法有了更近一步的了解。之后在写这份报告时，结合着PPT的基础知识以及网上的相关资料，我对于这些算法的原理分析（completeness, time, space...）也有了更深入的认识。总之，这一次的assignment让我有了很大的收获，纸上得来终觉浅，绝知此事要躬行，以后再接再厉！
-
-
-
 ## Appendix
 
 由于结果是进行了100次后取平均值，因此结果很多，以下仅仅从100次中各自截取一次puzzle game的结果，每个算法跑出来的action sequence和state sequence都可以在截图中看到，以及最后一张是平均结果的截图（Avg Running Time为相应的搜索算法的平均运行时间，Avg Steps为相应的搜索算法搜索出来的平均路径步数，Avg Time为相应的搜索算法的平均运行加上展示出结果的时间）。
