@@ -321,6 +321,7 @@ class Game {
                     }
                 }
             }
+            isVisited[currentState.getUniqueId()] = false;
             return 0;
         }
 };
