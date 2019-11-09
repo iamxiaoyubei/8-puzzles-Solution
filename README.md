@@ -7,7 +7,7 @@ By Yubei Xiao
 
 Given any randomly generated start state and a goal state shown below, implement the IDS, greedy search and A* search algorithms, respectively, to find a sequence of actions that will transform the state from the start state to the goal state.
 
-<img src="/Users/xiaoyubei/Desktop/屏幕快照 2019-11-08 上午10.39.33.png" style="zoom:40%;" />
+<img src="./pic/goal_state.png" style="zoom:40%;" />
 
 ## Requirements
 
@@ -54,15 +54,15 @@ void generateStartState(int times) {
 
 IDS算法的伪代码和思路已在课件中给出：
 
-<img src="/Users/xiaoyubei/Desktop/屏幕快照 2019-11-08 下午3.01.33.png" style="zoom:100%;" />
+<img src="./pic/IDS.png" style="zoom:100%;" />
 
 它实际上可以认为是深搜(depth-first search)和宽搜(breadth-first search)的结合版本。在外层循环$depth=[0,+\infty)$从而给定了每次搜索的深度限制，在内部使用类似于深搜的方法*depthLimitedSearch*进行限制深度的搜索。
 
 因此它结合了深搜和宽搜两者的优势并且摒弃了两者的劣势，比如它通过每次搜索的深度限制去除了深搜在无限深度情况下陷入死循环的问题(fail in inﬁnite-depth spaces)，同时又通过每次*depthLimitedSearch*使用深搜的策略从而无需将上面每一层的node保存在memory中，因此相对于宽搜节省了十分多的内存空间(memory space)等等。下图便展示了Iterative Deepening Search相对于深搜宽搜的优势：
 
-<img src="/Users/xiaoyubei/Desktop/屏幕快照 2019-11-08 下午4.02.07.png" style="zoom:100%;" />
+<img src="./pic/IDS_DFS_BFS.png" style="zoom:100%;" />
 
-![](/Users/xiaoyubei/Desktop/屏幕快照 2019-11-08 下午4.04.30.png)
+![](./pic/explain.png)
 
 因此，按照IDS的思路，代码实现如下：
 
@@ -330,7 +330,7 @@ times为总共进行的puzzle game的次数，shuffleTimes为初始化start stat
 | **AStarSearchByManhattanDistance** |   **0.000209**   |  **5.8**  |
 |   AStarSearchByMisplacedDistance   |     0.000352     |  **5.8**  |
 
-实验记录截图包括每一次的具体路径和state变化见[Appendix Result1](#Result1)。
+实验记录截图包括每一次的具体路径和state变化见[Appendix Result1](#result1)。
 
 #### times: 100	shuffleTimes: 50
 
@@ -342,7 +342,7 @@ times为总共进行的puzzle game的次数，shuffleTimes为初始化start stat
 | **AStarSearchByManhattanDistance** |   **0.00058**    | **9.09**  |
 |   AStarSearchByMisplacedDistance   |     0.002429     | **9.09**  |
 
-实验记录截图包括每一次的具体路径和state变化见[Appendix Result2](#Result2)。
+实验记录截图包括每一次的具体路径和state变化见[Appendix Result2](#result2)。
 
 
 
